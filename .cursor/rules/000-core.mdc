@@ -1,0 +1,69 @@
+---
+description: RefereeCode core — mandatory type-safety, Server/Client boundary, and validation rules for this Next.js + TypeScript codebase
+alwaysApply: true
+---
+
+# RefereeCode Core
+
+This is a production Next.js (App Router) codebase using strict TypeScript, Tailwind CSS, and Zod.
+
+Rules come in two tiers:
+
+- **MUST** — mandatory. Never break one silently. If a request can only be done by breaking a MUST rule, name the rule and ask before proceeding.
+- **SHOULD** — strong defaults (see `100-best-practices.mdc` and the SHOULD sections of other rules). Deviate only for a concrete reason, and state that reason in your reply.
+
+## MUST — Type safety
+
+1. Never use `any`: not explicit, not inferred, not `as any`, not `any[]`, not `Record<string, any>`. Use `unknown` and narrow it.
+2. Never use `@ts-ignore`. `@ts-expect-error` is allowed only with a comment explaining why.
+3. Never use the non-null assertion operator (`!`) to satisfy the compiler. Handle `null` and `undefined` explicitly.
+4. Never assert the type of untrusted data (`(await res.json()) as User`). Parse it with a Zod schema.
+5. Never weaken `tsconfig.json` or disable a lint rule inline without a one-line justification comment.
+
+```ts
+// ❌ Wrong
+function getName(data: any) {
+  return data.user.name;
+}
+
+// ✅ Right
+function getName(data: unknown): string | null {
+  const parsed = UserPayloadSchema.safeParse(data);
+  if (!parsed.success) return null;
+  return parsed.data.user.name;
+}
+```
+
+## MUST — Server/Client boundary
+
+6. Components are Server Components unless they need state, effects, event handlers, browser APIs, or a client-only library.
+7. Never import a server-only module (anything under `server/`, or any file containing `import 'server-only'`) into a file marked `'use client'`.
+8. Secrets and non-`NEXT_PUBLIC_` environment variables never reach client code.
+
+## MUST — Validation
+
+9. Validate all data entering from outside the process with Zod before using it: request bodies, route params, search params, `FormData`, environment variables, third-party API responses, `JSON.parse` output, and browser storage.
+
+## Project structure
+
+```
+src/                # or the project root if the project does not use src/
+  app/              # routes only: page, layout, loading, error, route handlers
+  components/
+    ui/             # presentational primitives — no data fetching
+    features/       # feature-level components
+  server/           # server-only data access and services
+  schemas/          # Zod schemas and their inferred types
+  lib/              # framework-agnostic utilities
+```
+
+- Keep files in `app/` thin: fetch through `server/`, render through `components/`.
+- Import with the `@/` alias. No `../../../` chains.
+
+## Working protocol
+
+- Before editing, read the files you will change and their direct imports.
+- Change only what the task requires. No drive-by refactors.
+- Do not add dependencies without asking.
+- If you are unsure whether an API exists in the installed version of a package, check `package.json` and the installed package. Do not guess.
+- Code must pass `tsc --noEmit` and ESLint. Never claim it does unless you ran them.
