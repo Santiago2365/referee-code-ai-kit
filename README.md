@@ -6,6 +6,8 @@ RefereeCode AI Kit is a set of modular Cursor Project Rules and prompt workflows
 
 This repository contains a **free sample**: the kit's core rule file. The full kit is a paid download.
 
+**[→ Get the full kit for USD 10](https://refereecode.lemonsqueezy.com/checkout/buy/3a12d4cc-48de-4f7f-ac06-d08223793b56)**
+
 ---
 
 ## Try the free core rule
@@ -66,7 +68,7 @@ For the two tasks where a single prompt most often goes wrong (building an API e
 
 **USD 10, one-time payment.** Single-developer license for unlimited personal and client projects. Minor updates included. No subscription.
 
-**Purchase link: coming soon.**
+**[Buy the full kit on Lemon Squeezy →](https://refereecode.lemonsqueezy.com/checkout/buy/3a12d4cc-48de-4f7f-ac06-d08223793b56)**
 
 ## Compatibility
 
